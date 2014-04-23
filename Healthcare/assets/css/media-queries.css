@@ -1,0 +1,46 @@
+﻿@media only screen and (max-height : 580px) {
+    .left-section-date {
+        margin-top: -25px;
+        height: 45px;
+    }
+
+    .indicator-chart:last-child,
+    .cholesterol.indicators-info,
+    .right-section-telephone,
+    .right-section-place {
+        display: none;
+    }
+
+    .left-section-day {
+        font-size: 32px;
+    }
+}
+
+
+@media only screen and (max-height : 800px) {
+
+    .medication-instructions-long,
+    .right-section-place-long,
+    .ui-igtile-maximized .cholesterol.indicators-info,
+    .ui-igtile-maximized .indicator-chart:last-child {
+        display: none;
+    }
+}
+
+@media only screen and (max-height : 735px) {
+    .medLine5 {
+        display: none;
+    }
+}
+
+@media only screen and (max-height : 665px) {
+    .medLine4 {
+        display: none;
+    }
+}
+
+@media only screen and (max-height : 530px) {
+    .medLine3 {
+        display: none;
+    }
+}

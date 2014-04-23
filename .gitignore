@@ -1,0 +1,10 @@
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+CordovaWP8_3.4.0-Healthcare/Bin/
+CordovaWP8_3.4.0-Healthcare/obj/

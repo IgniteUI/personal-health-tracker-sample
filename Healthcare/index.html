@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1"><!-- Do not change this! -->
+    <meta name="msapplication-tap-highlight" content="no" /> 
+    <!-- Stylesheets -->
+
+    <!-- Open Sans Typeface -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- jQuery and jQuery Mobile -->
+    <link href="Content/jquery.mobile.structure-1.3.2.min.css" rel="stylesheet" />
+    
+    <!-- Infragistics theme -->
+    <link href="igniteui/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="igniteui/css/structure/modules/infragistics.ui.layout.css" rel="stylesheet" />
+    <link href="igniteui/css/structure/modules/infragistics.ui.tilemanager.css" rel="stylesheet" />
+
+    <!-- Healthcare theme -->
+    <link href="assets/css/app.css" rel="stylesheet" />
+    <link href="assets/css/media-queries.css" rel="stylesheet" />
+</head>
+<body>
+    <script id="page-template" type="text/x-ig-template">
+        <!-- Start of ${page} page -->
+        <div data-role="page" id="${page}">
+
+            <!-- menu panel  -->
+		    <div id="menu-panel-${page}" class="menu-panel" data-role="panel" data-position="right" data-display="overlay">
+		    </div>
+		    <!-- /panel -->
+
+            <div data-role="header" data-position="fixed">
+                 <span class="logo-main"></span>
+                 <h1>${title}</h1>
+                 <h2>${subtitle}</h2>
+                 <a href="#${homePage}" class="home-btn"></a>
+                 <a href="#menu-panel-${page}" data-iconpos="notext" class="menu-btn">${panelMenuLabel}</a>
+   	        </div>
+            <!-- /header -->
+
+            <div data-role="content">
+            </div>
+            <!-- /content -->
+        </div>
+        <!-- /page -->
+    </script>
+
+    <script id="page-template-dashboard" type="text/x-ig-template">
+        <div id="dashboard-home" class="dashboardHome">
+            <div class="next-medication-tile tile">
+                <div class="tile-header next-medication-header initial-state">
+                    <span class="tile-header-icon sprite-main next-medication-icon"></span>
+                    <h4 class="tile-header-text next-medication-text">${nextMedication}</h4>
+                    <span class="tile-header-icon sprite-main tile-go-icon"></span>
+                </div>
+                <div class="tile-content initial-state">
+                    <div class="tile-left-section">
+                        <div class="left-section-header"><span class="clock"></span></div>
+                        <div class="left-section-footer next-medication-footer">5:00${pm}</div>
+                    </div>
+                    <div class="tile-right-section next-medication-right-section">
+                        <div class="right-section-name">${medicationsData.0.name}</div>
+                        <div class="medication-instructions-text">${instructions}</div>
+                        <div class="medication-instructions medLine1">${medicationsData.0.frequency}</div>
+                        <div class="medication-instructions medLine2">${medicationsData.0.instructions}</div>
+                        <div class="medication-instructions medLine3">${medicationDetailsView.refillsLeftLabel}: ${medicationsData.0.refillsLeft}</div>
+                        <div class="medication-instructions medLine4">${medicationDetailsView.lastFillDateLabel}: ${medicationsData.0.lastFillDateStr}</div>
+                        <div class="medication-instructions medLine5">${medicationDetailsView.prescriberLabel}: ${medicationsData.0.prescriber}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="health-indicators-tile tile">
+                <div class="tile-header health-indicators-header initial-state">
+                    <span class="tile-header-icon sprite-main next-indicators-icon"></span>
+                    <h4 class="tile-header-text next-indicators-text">${healthIndicators}</h4>
+                    <span class="tile-header-icon sprite-main tile-go-icon"></span>
+                </div>
+                <div class="tile-content initial-state">
+                    <div class="weight indicators-info">
+                        <div class="weight-icon indicator-icon">
+                        </div>
+                        <div class="weight-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.weight} ${lbs}</div>
+                            <div class="indicator-type">${weight}</div>
+                        </div>
+                    </div>
+                    <div id="weight-chart-home" class="indicator-chart"></div>
+                    <div class="blood-pressure indicators-info">
+                        <div class="blood-pressure-icon indicator-icon">
+                        </div>
+                        <div class="blood-pressure-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.bloodPressureSystolic}/${indicatorsData.0.bloodPressureDiastolic} ${mmHg}</div>
+                            <div class="indicator-type">${bloodPressure}</div>
+                        </div>
+                    </div>
+                    <div id="blood-pressure-chart-home" class="indicator-chart"></div>
+                    <div class="cholesterol indicators-info">
+                        <div class="cholesterol-icon indicator-icon">
+                        </div>
+                        <div class="cholesterol-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.cholesterolLDL} ${ldl} / ${indicatorsData.0.cholesterolHDL} ${hdl}</div>
+                            <div class="indicator-type">${cholesterol}</div>
+                        </div>
+                    </div>
+                    <div id="cholesterol-chart-home" class="indicator-chart"></div>
+                </div>
+            </div>
+            <div class="next-appointment-tile tile">
+			    <div class="tile-header next-appointment-header initial-state">
+                    <span class="tile-header-icon sprite-main next-appointment-icon"></span>
+                    <h4 class="tile-header-text next-appointment-text">${nextAppointment}</h4>
+                    <span class="tile-header-icon sprite-main tile-go-icon"></span>
+                </div>
+                <div class="tile-content initial-state">
+                    <div class="tile-left-section">
+                        <div class="left-section-header calendar-left-section">
+                            <div class="left-section-date">
+                                <div class="left-section-month">${appointmensData.0.month}</div>
+                                <div class="left-section-day">${appointmensData.0.dayOfMonth}</div>
+                            </div>
+                        </div>
+                        <div class="left-section-footer next-appointment-footer">
+                            <div class="left-section-hour">${appointmensData.0.hour}</div>
+                        </div>
+                    </div>
+                    <div class="tile-right-section next-appointment-right-section">
+                        <div class="right-section-type">${psychologist} ${appointmentShort}</div>
+                        <div class="right-section-physician">${appointmensData.0.physician}</div>
+                        <div class="right-section-place">${appointmensData.0.place}</div>
+                        <div class="right-section-notes">${appointmensData.0.notes}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-tile-manager" class="dashboard">
+            <div class="next-medication-tile tile">
+                <div class="tile-header next-medication-header maximized-state">
+                    <span class="tile-header-icon sprite-main next-medication-icon"></span>
+                    <h4 class="tile-header-text next-medication-text">${medications}</h4>
+                </div>
+                <div class="tile-content maximized-state">
+                     <ul id="medications-view"
+                            data-role="iglistview"
+                            data-data-source="dashboardData.medicationsData"
+                            data-bindings-custom-bindings='[{"fieldName":"name","dataType":"string"},{"fieldName":"instructions","dataType":"string"},{"fieldName":"pictureClass","dataType":"string"}]'
+                     </ul>
+                </div>
+                <div class="minimized-state">
+                    <div class="tile-header next-medication-header">
+                        <h4 class="tile-header-text next-medication-text">${medications}</h4>
+                    </div>
+                    <div class="tile-content">
+                        <div class="tile-left-section"><span class="sprite-main"></span></div>
+                        <div class="tile-right-section">
+                            <div class="value">5:00${pm}</div>
+                            <div class="instructions">${medicationsData.0.name}, ${medicationsData.0.frequency}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="health-indicators-tile tile">
+                <div class="tile-header health-indicators-header maximized-state">
+                    <span class="tile-header-icon sprite-main next-indicators-icon"></span>
+                    <h4 class="tile-header-text next-indicators-text">${healthIndicators}</h4>
+                </div>
+                <div class="tile-content maximized-state">
+                    <div class="weight indicators-info">
+                        <div class="weight-icon indicator-icon">
+                        </div>
+                        <div class="weight-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.weight} ${lbs}</div>
+                            <div class="indicator-type">${weight}</div>
+                        </div>
+                    </div>
+                    <div id="weight-chart" class="indicator-chart"></div>
+                    <div class="heart-rate indicators-info">
+                        <div class="heart-rate-icon indicator-icon">
+                        </div>
+                        <div class="weight-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.heartRate} ${bpm}</div>
+                            <div class="indicator-type">${heartRate}</div>
+                        </div>
+                    </div>
+                    <div id="heart-rate-chart" class="indicator-chart"></div>
+                    <div class="blood-pressure indicators-info">
+                        <div class="blood-pressure-icon indicator-icon">
+                        </div>
+                        <div class="blood-pressure-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.bloodPressureSystolic}/${indicatorsData.0.bloodPressureDiastolic} ${mmHg}</div>
+                            <div class="indicator-type">${bloodPressure}</div>
+                        </div>
+                    </div>
+                    <div id="blood-pressure-chart" class="indicator-chart"></div>
+                    <div class="cholesterol indicators-info">
+                        <div class="cholesterol-icon indicator-icon">
+                        </div>
+                        <div class="cholesterol-info indicator-info">
+                            <div class="indicator-value">${indicatorsData.0.cholesterolLDL} ${ldl} / ${indicatorsData.0.cholesterolHDL} ${hdl}</div>
+                            <div class="indicator-type">${cholesterol}</div>
+                        </div>
+                    </div>
+                    <div id="cholesterol-chart" class="indicator-chart"></div>
+                </div>
+                <div class="minimized-state">
+                    <div class="tile-header health-indicators-header">
+                        <h4 class="tile-header-text next-indicators-text">${healthIndicators}</h4>
+                    </div>
+                    <div class="tile-content">
+                        <div class="tile-left-section"><span class="sprite-main"></span></div>
+                        <div class="tile-right-section">
+                            <div class="value">${indicatorsData.0.bloodPressureSystolic}/${indicatorsData.0.bloodPressureDiastolic} ${mmHg}</div>
+                            <div class="instructions">${normalBp}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="next-appointment-tile tile">
+			    <div class="tile-header next-appointment-header maximized-state">
+                    <span class="tile-header-icon sprite-main next-appointment-icon"></span>
+                    <h4 class="tile-header-text next-appointment-text">${doctorAppointments}</h4>
+                </div>
+                <div class="tile-content maximized-state">
+                    <div>
+                         <ul id="appointments-view"
+                                data-role="iglistview"
+                                data-data-source="dashboardData.appointmensData"
+                                data-bindings-custom-bindings='[{"fieldName":"day","dataType":"string"},{"fieldName":"physician","dataType":"string"},{"fieldName":"hour","dataType":"string"},{"fieldName":"notes","dataType":"string"},{"fieldName":"type","dataType":"string"}, {"fieldName" : "date", "dataType": "date"}]'
+                         </ul>
+                    </div>
+                    <div>
+                        <span class="sprite-main recent-visits-icon"></span><span class="recent-visits">${recentVisits}</span>
+                        <ul id="recent-appointments-view"
+                            data-role="iglistview"
+                            data-data-source="dashboardData.recentAppointments"
+                            data-bindings-custom-bindings='[{"fieldName":"day","dataType":"string"},{"fieldName":"physician","dataType":"string"},{"fieldName":"hour","dataType":"string"},{"fieldName":"notes","dataType":"string"},{"fieldName":"type","dataType":"string"}, {"fieldName" : "date", "dataType": "date"}]'
+                        </ul>
+                    </div>
+                </div>
+                <div class="minimized-state">
+                    <div class="tile-header next-appointment-header">
+                        <h4 class="tile-header-text next-appointment-text">${appointments}</h4>
+                    </div>
+                    <div class="tile-content">
+                        <div class="tile-left-section"><span class="sprite-main"></span></div>
+                        <div class="tile-right-section">
+                            <div class="value">${appointmentRightSectionMonth} ${appointmensData.0.dayOfMonth}, ${appointmensData.0.hour}</div>
+                            <div class="instructions">${appointmensData.0.type}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="page-template-about" type="text/x-ig-template">
+            <div class="about-page-content">
+                <h1>${aboutTheShowcaseTitle}</h1>
+                <div class="about-page-info">
+                    <p>${aboutTheShowcaseLabel}</p>
+                </div>
+                <h1>${controlUsedTitle}</h1>
+                <div class="about-controls-used">
+                    <div class="row">
+                        <div class="col"><span class="sprite-main icon-tilemanager"></span><span>${tileManager}</span></div>
+                        <div class="col"><span class="sprite-main icon-chart"></span><span>${chart}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><span class="sprite-main icon-listview"></span><span>${listView}</span></div>
+                        <div class="col"><span class="sprite-main icon-templating"></span><span>${templating}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><span class="sprite-main icon-lineargauge"></span><span>${linearGauge}</span></div>            
+                    </div>
+                </div>
+            </div>
+            <a href='http://igniteui.com' target='_blank'>
+	            <div class='dialog-igniteui'><img src='assets/images/igniteui.png'></div>
+            </a>
+            <a href='http://infragistics.com' target='_blank'>
+	            <div class='dialog-infragistics'><img src='assets/images/infragistics.png'></div>
+            </a>
+    </script>
+
+    <script id="page-template-emergency" type="text/x-ig-template">
+        <div class="emergency-page-content">
+            <div class="page-header">
+                <h2><span class="page-header-icon icon-emergency-white"></span>${name}</h2>
+            </div>
+                <span class="emergency-quick-info">${bloodTypeLabel}: <span>${bloodType}</span></span>
+                <span class="emergency-quick-info">${organDonorLabel}: <span>${organDonor}</span></span>
+            <ul id="contacts-list-view"
+                data-role="iglistview"
+                data-data-source="emergencyData.contacts"
+                data-bindings-header-key="title"
+                data-bindings-primary-key="id"
+                data-bindings-text-key="name"
+                data-bindings-description-key="address"
+                data-bindings-custom-bindings='[{"fieldName":"phone","dataType":"string"},{"fieldName":"mobilePhone","dataType":"string"},{"fieldName":"email","dataType":"string"}]'
+            </ul>
+            </div>
+        </div>
+    </script>
+
+    <script id="page-template-patient" type="text/x-ig-template">
+    <div class="page-header">
+        <h2><span class="page-header-icon icon-patient-white"></span>${patientTitleLabel}</h2>
+    </div>
+
+    <div class="patient-container">
+        <header>
+            <img src="${imageUrl}" alt="${patientImageAltLabel}" /> 
+            <div>${genderLabel}: <span>${gender}</span></div>
+            <div>${dobLabel}: <span>${dob}</span></div>
+            <div>${languageLabel}: <span>${language}</span></div>
+            <div>${maritalStatusLabel}: <span>${maritalStatus}</span></div>
+        </header>
+        <span class="sprite-main patient-icon-adr"></span><span>${address} </span><br>
+        <span class="sprite-main patient-icon-phone"></span><span>${phone} </span>
+        <span class="sprite-main patient-icon-mobile"></span><span>${mobilePhone} </span><br>
+        <span class="sprite-main patient-icon-email"></span><span>${email} </span>
+    </div>
+
+    <div class="subpage-header">
+        <h2><span class="page-header-icon icon-allergies"></span>${allergiesTitleLabel}</h2>
+    </div>
+
+    <div class="patient-container">
+        <h3>${allergies.0.name}</h3>
+        <div class="allergies"></div>
+        <div class="alergies-reaction">${reactionLabel}: </div><span class="alergies-reaction">${allergies.0.reaction}</span>
+        <h3>${allergies.1.name}</h3>
+        <div class="allergies"></div>
+        <div class="alergies-reaction">${reactionLabel}: </div><span class="alergies-reaction">${allergies.1.reaction}</span>
+    </div>
+
+    <div class="subpage-header">
+        <h2><span class="page-header-icon icon-immunizations"></span>${immunizationsTitleLabel}</h2>
+    </div>
+
+    <div class="patient-container">
+        <div>${immunization.0.day}.${immunization.0.month}.${immunization.0.year} <span>${immunization.0.information}</span></div>
+        <div>${immunization.1.day}.${immunization.1.month}.${immunization.1.year} <span>${immunization.1.information}</span></div>
+        <div>${immunization.2.day}.${immunization.2.month}.${immunization.2.year} <span>${immunization.2.information}</span></div>
+    </script>
+
+    <script id="medication-reminder-template" type="text/x-ig-template">
+         <div id="medication-reminder">
+                <div class="medication-reminder-header">
+                   <span class="sprite-main"></span> <span class="medication-reminder-title">${reminderView.title}</span>
+                </div>
+                <div class="medication-reminder-content">
+	                <div class="medication-reminder-medicine">${name}</div>
+                    <div class="medication-reminder-dosage">${dosage}</div>
+                    <button id="snooze-button">${reminderView.snooze}</button><button id="dismiss-button">${reminderView.dismiss}</button>
+                </div>
+        </div>
+    </script>
+
+    <script id="appointment-details-template" type="text/x-ig-template">
+        <div class="details-overlay"></div>
+        <div id="appointment-details">
+            <div class="appointment-details-type">${clickedAppointmentData.type}<span class="details-close"><span class="sprite-main"></span></span></div>
+            <div class="appointment-details-date">${time}</div>
+                
+            <div class="appointment-details-physician">${clickedAppointmentData.physician}</div>
+            <div class="appointment-details-place">
+                <span class="appointment-details-picture">
+                    <span class="sprite-main"></span>
+                </span>
+                <span class="appointment-details-address">
+                    <span>${clickedAppointmentData.place}</span></br>
+                    <span>${clickedAppointmentData.address}</span>
+                </span>
+            </div>
+            <div class="appointment-details-telephone">
+                <span class="appointment-details-picture">
+                    <span class="sprite-main"></span>
+                </span>
+                <span>${clickedAppointmentData.telephone}</span>
+            </div>
+            <div class="appointment-details-notes">
+                <h1>Notes</h1>
+                <div class="appointment-details-notes">${clickedAppointmentData.notes}</div>
+            </div>
+        </div>
+    </script>
+
+    <script id="medication-details-template" type="text/x-ig-template">
+        <div class="details-overlay"></div>
+        <div id="medication-details">
+            <div>
+                <div class="medication-details-name">${clickedMedicationData.name}<span class="details-close"><span class="sprite-main"></span></span></div>
+                <div class="medication-details-text"><span>${medicationDetailsView.strengthLabel}: </span>${clickedMedicationData.strength}</div>
+
+                <div class="medication-details-titles"><span>${medicationDetailsView.dosageLabel}</span><span>${medicationDetailsView.frequencyLabel}</span></div>
+
+                <span class="medication-details-dosage">${dosage.0}</span>
+                <span class="medication-details-dosage">${dosage.1}</span>
+                
+
+                <span class="medication-details-frequency">${frequency.0} ${frequency.1}</span>
+                <span class="medication-details-frequency">${frequency.2} ${frequency.3}</span>
+
+                
+                <div class="medication-details-instructions-title">${medicationDetailsView.instructionsLabel}</div>
+                <div class="medication-details-instructions">${clickedMedicationData.instructions}</div>
+
+                <div class="medication-details-prescription-title">${medicationDetailsView.prescriptionInfoLabel}</div>
+                <div class="medication-details-text"><span>${medicationDetailsView.refillsLeftLabel}: </span>${clickedMedicationData.refillsLeft}</div>
+                <div class="medication-details-text"><span>${medicationDetailsView.lastFillDateLabel}: </span>${lastFillDate}</div>
+                <div class="medication-details-text"><span>${medicationDetailsView.prescriberLabel}: </span>${clickedMedicationData.prescriber}</div>         
+
+                <button>${medicationDetailsView.getRefillLabel}</button>
+            </div>
+        </div>
+    </script>
+
+    <!-- jQuery, jQuery Mobile and jQuery UI -->
+    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="Scripts/jquery-ui-1.10.3.min.js"></script>
+    
+    <script src="Scripts/jquery.mobile-1.3.2.min.js"></script>
+
+
+    <!-- Ignite UI and Ignite UI Mobile -->
+    <script src="igniteui/js/infragistics.loader.js"></script>
+
+    <script src="igniteui/js/modules/infragistics.util.js"></script>
+    <script src="igniteui/js/modules/infragistics.templating.js"></script>
+    <script src="igniteui/js/modules/infragistics.datasource.js"></script>
+    <script src="igniteui/js/modules/infragistics.ui.layoutmanager.js"></script>
+    <script src="igniteui/js/modules/infragistics.ui.tilemanager.js"></script>
+
+    <script src="igniteui/mobile/js/modules/infragistics.mobileui.list.js"></script>
+    <!-- PhoneGap -->
+    <script src="phonegap.mock.js"></script><!-- Remove .mock before you upload to PhoneGap Build -->
+
+    <!-- Healthcare core -->
+    <script src="assets/js/config.js"></script>
+    <script>
+        // Load async array of resources files by path
+        var loadResources = function (resources, language) {
+            // private variables
+            var instance;
+
+            // private methods
+            var init = function () {
+                var deferreds = GetResourcesDeferredData();
+
+                return $.when.apply(null, deferreds);
+            };
+
+            function GetResourcesDeferredData() {
+                var deferreds = [],
+                    pathToResources = null,
+                    i = 0;
+
+                for (i = 0; i < resources.length; i++) {
+                    pathToResources = [
+                           resources[i].folder,
+                           language,
+                           resources[i].file
+                    ].join("/");
+
+                    deferreds.push(
+                        $.getScript(pathToResources)
+                    );
+                }
+
+                return deferreds;
+            }
+
+            if (!instance) {
+                instance = init();
+            }
+
+            return instance;
+        };
+
+        var getLanguageFromLocaleName = function (configLanguage, globalization, callback) {
+            var language = configLanguage.defaultLanguage;
+            return globalization.getLocaleName(function (locale) {
+                var tmpLanguage = locale.value.split("_")[0];
+
+                if (configLanguage.supportedLanguages.indexOf(tmpLanguage) !== -1) {
+                    language = tmpLanguage;
+                }
+
+                callback(language);
+            }, function () {
+                alert("Healthcare.Resources.General.ErrorGettingLocale");
+            });
+        };
+        
+       $(document).on("deviceready", function () {
+            if (navigator.globalization) {
+                getLanguageFromLocaleName(Healthcare.config.language,
+                   navigator.globalization,
+                   function (language) {
+                       loadResources(Healthcare.config.resources, language).done(function () {
+                           $.getScript(Healthcare.config.appJsFileLocation).done(function () {
+                               Healthcare.init();
+                           })
+                       });
+                   });
+            } else {
+                loadResources(Healthcare.config.resources, Healthcare.config.language.defaultLanguage).done(function () {
+                    $.getScript(Healthcare.config.appJsFileLocation).done(function () {
+                        Healthcare.init();
+                    })
+                });
+            }
+        });
+
+        window.addEventListener("load", function () {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+
+    <!-- Other frameworks -->
+    <script src="assets/js/fastclick.js"></script>
+    <!-- for speeding tap events -->
+</body>
+</html>
